@@ -1,0 +1,32 @@
+{
+  "name": "api-loja-informatica",
+  "version": "1.0.0",
+  "description": "Primeiro Trabalho da matéria de Desenvolvimento de Serviços e APIs",
+  "main": "index.js",
+  "scripts": {
+  "dev": "npx ts-node-dev --respawn --transpile-only src/server.ts",
+  "build": "tsc",
+  "start": "node dist/server.js"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/istalo/API-Loja-Informatica.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/istalo/API-Loja-Informatica/issues"
+  },
+  "homepage": "https://github.com/istalo/API-Loja-Informatica#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^6.0.3"
+  }
+}
