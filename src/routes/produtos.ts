@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma"
-import { Router } from 'express'
-import { z } from 'zod'
+import { Router } from "express"
+import { z } from "zod"
 
 const router = Router()
 

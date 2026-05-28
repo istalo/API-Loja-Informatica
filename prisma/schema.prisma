@@ -18,7 +18,7 @@ model Produto {
   @@map ("produtos")
 }
 
-model Vendas {
+model Venda {
   id          Int           @id @default(autoincrement())
   cliente     Cliente       @relation(fields: [clienteId], references: [id])
   clienteId   Int
@@ -35,19 +35,19 @@ model Cliente {
   email       String        @unique
   telefone    String?
   endereco    String        @db.VarChar(100)
-  vendas      Vendas[]
+  vendas      Venda[]
   @@map ("clientes")
 }
 
 model ItensVenda {
   id          Int           @id @default(autoincrement())
-  venda       Vendas        @relation(fields: [vendaId], references: [id])
+  venda       Venda        @relation(fields: [vendaId], references: [id])
   vendaId     Int
   produto     Produto       @relation(fields: [produtoId], references: [id])
   produtoId   Int
   quantidade  Int           @db.SmallInt
   precoUnid   Decimal       @db.Decimal(9,2)
-  @@map ("itens_venda")
+  @@map ("itens_vendas")
 }
 
 enum TipoPag {
