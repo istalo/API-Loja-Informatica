@@ -1,10 +1,23 @@
-import express from "express"
+import express from 'express'
 const app = express()
-const PORT = 3000
+const port = 3000
+
+// import routesClientes from "./routes/clientes"
+import routesProdutos from "./routes/produtos"
+// import routesVendas from "./routes/vendas"
+// import routesItensVenda from "./routes/itens_venda"
+
 app.use(express.json())
-app.get("/", (req, res) => {
-res.json({ message: "API funcionando!" })
+
+// app.use("/clientes", routesClientes)
+// app.use("/itens_venda", routesItensVenda)
+app.use("/produtos", routesProdutos)
+// app.use("/vendas", routesVendas)
+
+app.get('/', (req, res) => {
+  res.send('Sistema de Controle de Estoque - InfoSul')
 })
-app.listen(PORT, () => {
-console.log(`Servidor rodando na porta ${PORT}`)
+
+app.listen(port, () => {
+  console.log(`Servidor Rodando na Porta: ${port}`)
 })
