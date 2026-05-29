@@ -1,7 +1,8 @@
 import { prisma } from "../../lib/prisma"
 import { Router } from "express"
 import { z } from "zod"
-import { TipoPag } from "../../generated/prisma/enums";
+import { TipoPag } from "../../generated/prisma/enums"
+import nodemailer from "nodemailer"
 
 const router = Router()
 
@@ -87,6 +88,8 @@ router.post("/", async (req, res) => {
             })
         ])
         
+        enviaEmailCompra(cliente, produto, venda);
+
         res.status(201).json({ venda, produtoAtualizado, historico });
     } catch (error) {
         console.error(error);
@@ -128,5 +131,76 @@ router.delete("/:id", async (req, res) => {
         res.status(500).json({ erro: "Erro interno do servidor" })
     }
 })
+
+function gerarReciboHTML(clienteNome: string, produtoNome: string, precoUnitario: number, quantidade: number, total: number, formaPag: string, data: Date) {
+  const dataFormatada = data.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+  return `
+    <html>
+    <body style="font-family: Helvetica, Arial, sans-serif;">
+      <h2>InfoSul - Confirmação de Compra</h2>
+      <p>Olá, <strong>${clienteNome}</strong>!</p>
+      <p>Obrigado por comprar conosco. Abaixo estão os detalhes da sua compra:</p>
+      <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%; max-width: 600px;">
+        <thead style="background-color: rgb(195, 191, 191);">
+          <tr>
+            <th>Data da Compra</th>
+            <th>Produto</th>
+            <th>Qtd</th>
+            <th>Valor Unit.</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${dataFormatada}</td>
+            <td>${produtoNome}</td>
+            <td style="text-align: center;">${quantidade}</td>
+            <td style="text-align: right;">R$ ${Number(precoUnitario).toLocaleString("pt-br", { minimumFractionDigits: 2 })}</td>
+            <td style="text-align: right;">R$ ${Number(total).toLocaleString("pt-br", { minimumFractionDigits: 2 })}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Forma de Pagamento:</strong> ${formaPag}</p>
+      <br>
+      <p>Atenciosamente,<br>Equipe InfoSul.</p>
+    </body>
+    </html>
+  `;
+}
+
+const transporter = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: process.env.MAILTRAP_EMAIL,
+    pass: process.env.MAILTRAP_SENHA
+  },
+});
+
+async function enviaEmailCompra(cliente: any, produto: any, venda: any) {
+  const mensagem = gerarReciboHTML(
+    cliente.nome,
+    produto.nome,
+    Number(produto.preco),
+    venda.quantidade,
+    Number(venda.total),
+    venda.formaPag,
+    venda.data
+  );
+
+  try {
+    const info = await transporter.sendMail({
+      from: 'Loja InfoSul <vendas@infosul.com.br>',
+      to: cliente.email,
+      subject: "Confirmação de Compra - InfoSul",
+      text: `Olá ${cliente.nome}, confirmação da compra de ${venda.quantidade}x ${produto.nome} no valor de R$ ${venda.total}.`,
+      html: mensagem, // HTML body
+    });
+    console.log("Email enviado:", info.messageId);
+  } catch (error) {
+    console.error("Erro ao enviar email:", error);
+  }
+}
 
 export default router
