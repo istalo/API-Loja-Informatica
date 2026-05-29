@@ -1,0 +1,25 @@
+info:
+  name: Inserção
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:3000/produtos
+  body:
+    type: json
+    data: |-
+      {
+          "nome": "Gabinete Mid Tower RGB",
+          "estoque": 15,
+          "categoria": "Hardware",
+          "preco": 449.90,
+          "descricao": "Gabinete com lateral em vidro temperado, excelente fluxo de ar e 3 fans ARGB inclusas."
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

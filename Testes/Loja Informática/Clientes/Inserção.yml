@@ -1,0 +1,24 @@
+info:
+  name: Inserção
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:3000/clientes
+  body:
+    type: json
+    data: |-
+      {
+          "nome": "Zézinho Bala Torta",
+          "email": "zezinho@gmail.com",
+          "telefone": "(21) 99420-6767",
+          "endereco": "Morro do Dende, 420"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

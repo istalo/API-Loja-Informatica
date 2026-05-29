@@ -56,11 +56,9 @@ router.post("/", async (req, res) => {
 
         const valorTotal = Number(produto.preco) * quantidade
 
-        // Obter data de hoje (sem horas, para usar no HistoricoDiario)
         const hoje = new Date()
         const dataHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate())
 
-        // Fazer tudo em uma transação para garantir que não haja falhas parciais
         const [venda, produtoAtualizado, historico] = await prisma.$transaction([
             prisma.venda.create({ 
                 data: { 
@@ -108,44 +106,6 @@ router.delete("/:id", async (req, res) => {
             return;
         }
 
-        // Se uma venda for excluída, devemos estornar o produto para o estoque
-        const hoje = new Date(vendaExcluida.data.getFullYear(), vendaExcluida.data.getMonth(), vendaExcluida.data.getDate())
-
-        const [venda] = await prisma.$transaction([
-            prisma.venda.delete({ where: { id: Number(id)} }),
-            prisma.produto.update({
-                where: { id: vendaExcluida.produtoId },
-                data: { estoque: { increment: vendaExcluida.quantidade } }
-            }),
-            prisma.historicoDiario.updateMany({
-                where: { dataFechamento: hoje },
-                data: {
-                    totalReais: { decrement: vendaExcluida.total },
-                    qtdVendas: { decrement: 1 }
-                }
-            })
-        ])
-
-        res.status(200).json(venda)
-    } catch (error) {
-        res.status(500).json({ erro: "Erro interno do servidor" })
-    }
-})
-
-router.delete("/:id", async (req, res) => {
-    const { id } = req.params
-
-    try {
-        const vendaExcluida = await prisma.venda.findUnique({
-            where: { id: Number(id) }
-        })
-
-        if (!vendaExcluida) {
-            res.status(404).json({ erro: "Venda não encontrada." });
-            return;
-        }
-
-        // Se uma venda for excluída, devemos estornar o produto para o estoque
         const hoje = new Date(vendaExcluida.data.getFullYear(), vendaExcluida.data.getMonth(), vendaExcluida.data.getDate())
 
         const [venda] = await prisma.$transaction([
