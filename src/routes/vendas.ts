@@ -44,14 +44,13 @@ router.post("/", async (req, res) => {
     }
 
     try {
-        // Cria apenas a venda, sem tentar atualizar o cliente
         const venda = await prisma.venda.create({ 
             data: { clienteId, formaPag, total }
         });
         
         res.status(201).json(venda);
     } catch (error) {
-        console.error(error); // Imprime o erro completo no seu terminal!
+        console.error(error);
         res.status(500).json({ erro: "Erro ao criar a venda." });
     }
 })
