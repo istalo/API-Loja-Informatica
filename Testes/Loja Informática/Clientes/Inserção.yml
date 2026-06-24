@@ -10,10 +10,10 @@ http:
     type: json
     data: |-
       {
-          "nome": "Zézinho Bala Torta",
+          "nome": "Zézinho Benfica",
           "email": "zezinho@gmail.com",
-          "telefone": "(21) 99420-6767",
-          "endereco": "Morro do Dende, 420"
+          "telefone": "(21) 99420-6769",
+          "endereco": "Rua Augusta, 420"
       }
   auth: inherit
 

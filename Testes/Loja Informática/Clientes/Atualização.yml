@@ -10,9 +10,9 @@ http:
     type: json
     data: |-
       {
-          "nome": "Tomás Turbando",
+          "nome": "Tomás Teste",
           "email": "tomastes@gmail.com",
-          "telefone": "(11) 99969-6969",
+          "telefone": "(11) 99967-6769",
           "endereco": "Avenida Paulista, 404"
       }
   auth: inherit
